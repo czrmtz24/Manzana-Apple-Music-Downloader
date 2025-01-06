@@ -86,6 +86,7 @@ def run(args):
                     
                     cons.print(f"[dim]{'-'*30}[/]")
 
+                    # Song
                     if track["type"] == 1:
                         __enc_fp = os.path.join(
                             TEMPDIR,
@@ -116,7 +117,7 @@ def run(args):
                         if os.path.exists(__out_fp):
                             logger.info(f'"{track["file"]}.m4a" is already exists! skipping...')
                             continue
-                        
+                    # Music Video 
                     else:
                         __enc_v_fp = os.path.join(
                             TEMPDIR,
@@ -177,6 +178,7 @@ def run(args):
                     gc = aplm.get_content(track)
                     if not gc: continue
 
+                    # Song
                     if track["type"] == 1:
                         st = stats.get(track["id"])
                         if not st:
@@ -191,7 +193,7 @@ def run(args):
                             if os.path.exists(__enc_fp):
                                 os.remove(__enc_fp)
 
-                            logger.info(f'Downloading "{track["file"]}"...')
+                            logger.info(f'Downloading track {track["trackno"]}/{track["trackcount"]} "{track["file"]}"...')
 
                             download(
                                 track["streams"]["uri"],
@@ -260,7 +262,7 @@ def run(args):
 
                         if os.path.exists(__mux_fp):
                             os.renames(__mux_fp, __out_fp)
-
+                    # Music Video
                     else:
                         st = stats.get(track["id"])
                         if not st:
