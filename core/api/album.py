@@ -66,14 +66,6 @@ def parse_data(data):
     for item in data["relationships"]["tracks"]["data"]:
         attr = item.get("attributes")
 
-        # filename = parse.sanitize(
-        #     "{} - {}{}".format(
-        #         str(attr.get("trackNumber")).zfill(2),
-        #         attr.get("name"),
-        #         " [E]" if attr.get("contentRating") == "explicit" else ""
-        #     )
-        # )
-
         filename = parse.sanitize(
             "{}{} - {} - {}".format(
                 attr.get("name"),
