@@ -68,6 +68,20 @@ def main():
         action="store_true"
     )
     parser.add_argument(
+        '-aad',
+        '--artist-album-directories',
+        dest='artistAlbumDirectories',
+        help="save tracks under artist and album directories. [default: False]",
+        action="store_true"
+    )
+    parser.add_argument(
+        '-p',
+        '--path',
+        dest='path',
+        help="output path",
+        action="store"
+    )
+    parser.add_argument(
         'url',
         nargs='+',
         help="Apple Music URL(s) for artist, album, song, playlist or music-video",

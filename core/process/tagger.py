@@ -84,7 +84,7 @@ def tag(media, data, cover, output, nolrc=False, noTags=False):
             if "timeSyncedLyrics" in data:
                 logger.info("Saving time-synced lyrics...")
 
-                with open(os.path.join(output[0], output[1], f'{data["file"]}.lrc'), 'w+', encoding="utf8") as l:
+                with open(os.path.join(output, f'{data["file"]}.lrc'), 'w+', encoding="utf8") as l:
                     l.write(
                         '\n'.join(
                             data["timeSyncedLyrics"]
