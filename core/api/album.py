@@ -67,7 +67,7 @@ def parse_data(data):
         attr = item.get("attributes")
 
         filename = parse.sanitize(
-            "{}{} - {} - {}".format(
+            "{}{} - {}".format(
                 attr.get("name"),
                 " [E]" if attr.get("contentRating") == "explicit" else "",
                 attr.get("artistName")
