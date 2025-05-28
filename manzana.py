@@ -6,7 +6,7 @@ from utils import config
 
 install()
 
-__version__ = '2.4.0'
+__version__ = '2.5.0'
 
 LOGO = r"""
 
