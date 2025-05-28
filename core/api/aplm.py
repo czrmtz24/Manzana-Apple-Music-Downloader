@@ -57,6 +57,13 @@ class AppleMusic:
             if u.query:
                 self.songId = u.query.replace('i=', '')
 
+            if self.kind == 'song':
+                r = self.session.get(f"https://amp-api.music.apple.com/v1/catalog/us/songs/{self.id}")
+                r = json.loads(r.text)
+                self.kind = 'album'
+                self.songId = self.id
+                self.id = r['data'][0]['relationships']['albums']['data'][0]['id']
+
             logger.debug(f'UrlParseResult(kind="{self.kind}", id="{self.id}", songId="{self.songId}")')
         else:
             logger.error("Url is invalid!", 1)
