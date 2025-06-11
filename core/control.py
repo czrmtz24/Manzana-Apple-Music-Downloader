@@ -28,6 +28,13 @@ cons = Console()
 
 def run(args):
     try:
+        outputPath=OUTPUTDIR
+        if args.path:
+            if os.path.isdir(args.path):
+                outputPath=args.path
+            else:
+                logger.error(f"-p, --path {args.path} does not exist", exit=1)
+
         aplm = AppleMusic()
         logger.info("Checking passed urls...")
 
@@ -44,7 +51,7 @@ def run(args):
                 dn = sub_data.get("dir")
                 if not dn: dn = ""
 
-                out_dir = os.path.join(OUTPUTDIR, dn)
+                out_dir = os.path.join(outputPath, dn)
                 os.makedirs(out_dir, exist_ok=True)
                 
                 coverUrl = sub_data.get("coverUrl")
@@ -86,6 +93,7 @@ def run(args):
                     
                     cons.print(f"[dim]{'-'*30}[/]")
 
+                    # Song
                     if track["type"] == 1:
                         __enc_fp = os.path.join(
                             TEMPDIR,
@@ -108,7 +116,24 @@ def run(args):
                             )
                         )
 
-                        __out_fp = os.path.join(
+                        if (args.artistAlbumDirectories):
+                            album=f'{track["album"]}'
+                            if not album:
+                                album="Unknown"
+                            
+                            artist=f'{track["albumartist"]}'
+                            if not artist:
+                                artist=f'{track["songartist"]}'
+                                if not artist:
+                                    artist="Unknown"
+                            artistSpecificPath = os.path.join(out_dir, parse.sanitize(artist), parse.sanitize(album))
+                            os.makedirs(artistSpecificPath, exist_ok=True)
+                            __out_fp = os.path.join(
+                                artistSpecificPath,
+                                f'{track["file"]}.m4a'
+                            )
+                        else:
+                            __out_fp = os.path.join(
                             out_dir,
                             f'{track["file"]}.m4a'
                         )
@@ -116,7 +141,7 @@ def run(args):
                         if os.path.exists(__out_fp):
                             logger.info(f'"{track["file"]}.m4a" is already exists! skipping...')
                             continue
-                        
+                    # Music Video 
                     else:
                         __enc_v_fp = os.path.join(
                             TEMPDIR,
@@ -160,7 +185,24 @@ def run(args):
                             )
                         )
 
-                        __out_fp = os.path.join(
+                        if (args.artistAlbumDirectories):
+                            album=f'{track["album"]}'
+                            if not album:
+                                album="Unknown"
+                            
+                            artist=f'{track["albumartist"]}'
+                            if not artist:
+                                artist=f'{track["songartist"]}'
+                                if not artist:
+                                    artist="Unknown"
+                            artistSpecificPath = os.path.join(out_dir, parse.sanitize(artist), parse.sanitize(album))
+                            os.makedirs(artistSpecificPath, exist_ok=True)
+                            __out_fp = os.path.join(
+                                artistSpecificPath,
+                                f'{track["file"]}.mp4'
+                            )
+                        else:
+                            __out_fp = os.path.join(
                             out_dir,
                             f'{track["file"]}.mp4'
                         )
@@ -177,6 +219,7 @@ def run(args):
                     gc = aplm.get_content(track)
                     if not gc: continue
 
+                    # Song
                     if track["type"] == 1:
                         st = stats.get(track["id"])
                         if not st:
@@ -191,7 +234,7 @@ def run(args):
                             if os.path.exists(__enc_fp):
                                 os.remove(__enc_fp)
 
-                            logger.info(f'Downloading "{track["file"]}"...')
+                            logger.info(f'Downloading track {track["trackno"]}/{track["trackcount"]} "{track["file"]}"...')
 
                             download(
                                 track["streams"]["uri"],
@@ -244,12 +287,25 @@ def run(args):
 
                         if not st["isTagged"]:
                             logger.info("Tagging audio...")
-                            
+                    
+                            subDirectory = os.path.join(outputPath, out_dir)
+                            if (args.artistAlbumDirectories):
+                                album=f'{track["album"]}'
+                                if not album:
+                                    album="Unknown"
+                                
+                                artist=f'{track["albumartist"]}'
+                                if not artist:
+                                    artist=f'{track["songartist"]}'
+                                    if not artist:
+                                        artist="Unknown"
+                                subDirectory = os.path.join(subDirectory, parse.sanitize(artist), parse.sanitize(album))
+
                             tag(
                                 __mux_fp,
                                 track,
                                 cover_data,
-                                [OUTPUTDIR, out_dir],
+                                subDirectory,
                                 args.noLrc,
                                 args.noTags
                             )
@@ -260,7 +316,7 @@ def run(args):
 
                         if os.path.exists(__mux_fp):
                             os.renames(__mux_fp, __out_fp)
-
+                    # Music Video
                     else:
                         st = stats.get(track["id"])
                         if not st:
@@ -393,11 +449,24 @@ def run(args):
                         if not st["isTagged"]:
                             logger.info("Tagging music-video...")
                             
+                            subDirectory = os.path.join(outputPath, out_dir)
+                            if (args.artistAlbumDirectories):
+                                album=f'{track["album"]}'
+                                if not album:
+                                    album="Unknown"
+                                
+                                artist=f'{track["albumartist"]}'
+                                if not artist:
+                                    artist=f'{track["songartist"]}'
+                                    if not artist:
+                                        artist="Unknown"
+                                subDirectory = os.path.join(subDirectory, parse.sanitize(artist), parse.sanitize(album))
+
                             tag(
                                 __mux_fp,
                                 track,
                                 cover_data,
-                                [OUTPUTDIR, out_dir],
+                                subDirectory,
                                 args.noLrc,
                                 args.noTags
                             )
