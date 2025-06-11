@@ -13,3 +13,6 @@ core/__pycache__
 core/api/__pycache__
 core/content/__pycache__
 core/process/__pycache__
+AndroidKeyDump
+mediaToken
+SyncLibrary.ps1
