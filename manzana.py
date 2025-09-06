@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import argparse
 from rich.traceback import install
 
@@ -81,3 +83,4 @@ if __name__ == "__main__":
     args = main()
     config.get_config()
     run(args)
+
