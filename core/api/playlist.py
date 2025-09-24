@@ -108,16 +108,18 @@ def parse_data(data):
                     )
         
         if "albums" in rela:
-            attr = rela["albums"]["data"][0]["attributes"]
-            a.update(
-                {
-                    "copyright": attr.get("copyright"),
-                    "upc": attr.get("upc"),
-                    "recordlabel": attr.get("recordLabel"),
-                    "album": attr.get("name"),
-                    "albumartist": attr.get("artistName")
-                }
-            )
+            if rela["albums"].get("data"):
+                if rela["albums"]["data"][0].get("attributes"):
+                    attr = rela["albums"]["data"][0]["attributes"]
+                    a.update(
+                        {
+                            "copyright": attr.get("copyright"),
+                            "upc": attr.get("upc"),
+                            "recordlabel": attr.get("recordLabel"),
+                            "album": attr.get("name"),
+                            "albumartist": attr.get("artistName")
+                        }
+                    )
 
         if item.get("type") == "songs":
             s["type"] = 1
